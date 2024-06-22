@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name         yeah_MOOC脚本
+// @name         Yeah_MOOC脚本
 // @namespace    https://res.yeah666.com
 // @version      2.1.7
-// @description  慕课脚本，可以显示答案（题库），刷文档，做测试
-// @author       yeah
+// @description  慕课脚本，可以显示答案（题库），刷文档（暂不支持），做测试（暂不支持）
+// @author       Yeah
 // @icon         https://res.yeah666.com/img/logocore.png
 // @grant        unsafeWindow
 // @grant        GM_xmlhttpRequest
@@ -146,7 +146,7 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
       }
     });
     let sc_set_token = () => {
-      let sc_tokenTemp = prompt(`当前token值为${sc_tk_token},请填写新的token`);
+      let sc_tokenTemp = prompt(`当前token值为${sc_tk_token},请填写新的token(token获取地址：https://q.icodef.com/)`);
       if (sc_tokenTemp == null || sc_tokenTemp == "") {
         $("#script_desc").text("输入的token值为空,token未被修改");
       } else {
