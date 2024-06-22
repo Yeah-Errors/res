@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Yeah_MOOC脚本
 // @namespace    https://res.yeah666.com
-// @version      3.0.1
+// @version      3.0.2
 // @description  慕课脚本，可以显示答案（题库），刷文档（暂不支持），做测试（暂不支持）
 // @author       Yeah
 // @icon         https://res.yeah666.com/img/logocore.png
@@ -55,7 +55,7 @@ var sc_judge_msg = GM_getValue("sc_judge_msg", ["好", "good", "1"]);
     <div class="script_window sc_scroll_ui" id="script_setting">
       <div class="script_title">Yeah-脚本设置</div>
       <div class="script_desc " id="script_setting_info">
-        脚本设置页，双击对应标题可显示其帮助信息<br />
+        脚本设置页，双击此处可显示其帮助信息<br />
         设置完成后双击标题（脚本设置）即可保存关闭
       </div>
       <table class="sc_scroll_ui" id="script_setting_body">
