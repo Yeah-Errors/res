@@ -356,12 +356,12 @@ var sc_judge_msg = GM_getValue("sc_judge_msg", ["好", "good", "1"]);
       var sc_intervalId = setInterval(() => {
         try {
           if (sc_interval_times < sc_judge_count) {
-            $("#script_desc").text(`正在进行第${sc_interval_times++}次互评`);
+            $("#script_desc").text(`正在进行第${++sc_interval_times}次互评`);
             let sc_judgeList = document.querySelectorAll(
               ".m-homeworkQuestionList .s"
             );
 
-            //分数值0:满分；只有为-1:0分；超界：满分
+            //分数值0:满分；超界：满分：-1：0分;其余值:均为倒数第n个选项（随机或固定）
             if (sc_judge_mode == 1) {
               //固定分数模式评分
               for (let sc_judgeNode of sc_judgeList) {
