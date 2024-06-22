@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         yeah_MOOC脚本
 // @namespace    https://res.yeah666.com
-// @version      2.1.1
+// @version      2.1.2
 // @description  慕课脚本，可以显示答案（题库），刷文档，做测试
 // @author       yeah
 // @icon         https://res.yeah666.com/img/logocore.png
@@ -20,9 +20,9 @@
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @run-at       document-end
 // @updateURL    https://res.yeah666.com/js/mooc_monkey.js
-// @downloadURL  https://res.yeah666.com/js/mooc_monkey.js
-
+// @downloadURL  https://res.yeah666.com/js/mooc_monkey_meta.js
 // ==/UserScript==
+
 //答题前请配token
 var sc_tk_token = GM_getValue("sc_tk_token", "");
 
