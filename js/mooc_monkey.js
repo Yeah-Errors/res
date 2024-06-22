@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Yeah_MOOC脚本
 // @namespace    https://res.yeah666.com
-// @version      2.1.8
+// @version      3.0.1
 // @description  慕课脚本，可以显示答案（题库），刷文档（暂不支持），做测试（暂不支持）
 // @author       Yeah
 // @icon         https://res.yeah666.com/img/logocore.png
@@ -24,8 +24,12 @@
 // @updateURL    https://res.yeah666.com/js/mooc_monkey_meta.js
 // ==/UserScript==
 
-//答题前请配token
+//获取基础配置信息
 var sc_tk_token = GM_getValue("sc_tk_token", "");
+var sc_judge_count = GM_getValue("sc_judge_count", "5");
+var sc_judge_mode = GM_getValue("sc_judge_mode", "1");
+var sc_judge_sorce = GM_getValue("sc_judge_sorce", "0");
+var sc_judge_msg = GM_getValue("sc_judge_msg", ["好", "good", "1"]);
 
 (function () {
   $(sc_code);
@@ -33,21 +37,79 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
     "use strict";
 
     var elementHtml = `
-                      <div class="script_window sc_scroll_ui" id="script_window">
-                          <div class="script_title">Yeah-MOOC脚本</div>
-                          <div class="script_desc sc_scroll_ui" id="script_desc">此脚本可以用来刷文档，显示答案，刷课程等</div>
-                          <div class="script_but" id="sc_show_ans">显示答案</div>
-                          <div class="script_but" id="sc_set_token">修改token</div>
-                          <div class="script_but" id="sc_read_doc">刷文档</div>
-                          <div class="script_but" id="sc_do_test">做测试</div>
-                      </div>
-                      <div class="script_window anspage " id="show_ans_page">
-                            <div class="script_title" id="sc_back_menu">Yeah-显示答案</div>
-                            <div class="script_desc sc_scroll_ui" id="sc_log_info"></div>
-                            <div class="ans_textarea sc_scroll_ui" id="sc_ans_textarea"></div>
-                        </div>
+    <div class="script_window sc_scroll_ui" id="script_window_main">
+      <div class="script_title">Yeah-MOOC脚本</div>
+      <div class="script_desc sc_scroll_ui" id="script_desc">
+        此脚本可以用来显示测试答案，一键互评，一键阅读文档（暂不支持）等
+      </div>
+      <div class="script_but" id="sc_show_ans">显示答案</div>
+      <div class="script_but" id="sc_do_judge">一键互评</div>
+      <div class="script_but" id="sc_do_test">做测试</div>
+      <div class="script_but" id="sc_config">脚本设置</div>
+    </div>
+    <div class="script_window anspage" id="show_ans_page">
+      <div class="script_title" id="sc_back_menu">Yeah-显示答案</div>
+      <div class="script_desc sc_scroll_ui" id="sc_log_info"></div>
+      <div class="ans_textarea sc_scroll_ui" id="sc_ans_textarea"></div>
+    </div>
+    <div class="script_window sc_scroll_ui" id="script_setting">
+      <div class="script_title">Yeah-脚本设置</div>
+      <div class="script_desc " id="script_setting_info">
+        脚本设置页，双击对应标题可显示其帮助信息<br />
+        设置完成后双击标题（脚本设置）即可保存关闭
+      </div>
+      <table class="sc_scroll_ui" id="script_setting_body">
+        <tr class="script_setting_node">
+          <td id="sc_conf_tk_token_title">题库token:</td>
+          <td>
+            <input
+              type="text"
+              name=""
+              id="sc_conf_tk_token_value"
+              placeholder="输入题库token"
+            />
+          </td>
+        </tr>
+        <tr class="script_setting_node">
+          <td id="sc_conf_judge_count_title">每次互评作业量:</td>
+          <td>
+            <input
+              type="number"
+              id="sc_conf_judge_count_value"
+              value="5"
+              max="30"
+              min="1"
+            />
+          </td>
+        </tr>
+        <tr class="script_setting_node">
+          <td id="sc_conf_judge_mode_title">互评模式:</td>
+          <td>
+            <select id="sc_conf_judge_mode_value">
+              <option>---请选择---</option>
+              <option value="1">固定分数</option>
+              <option value="2">随机分数</option>
+            </select>
+          </td>
+        </tr>
+        <tr class="script_setting_node">
+          <td id="sc_conf_judge_sorce_title">互评分数</td>
+          <td>
+            <input
+              type="number"
+              name=""
+              id="sc_conf_judge_sorce_value"
+              min="-1"
+            />
+          </td>
+        </tr>
+        <tr class="script_setting_node">
+          <td>互评评语:</td>
+          <td><input type="text" id="sc_conf_judge_msg" /></td>
+        </tr>
+      </table>
+      </div>
                   `;
-
     // 将元素插入至body
     $("body").append(elementHtml);
 
@@ -133,15 +195,40 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
                       #sc_back_menu {
                         cursor: pointer;
                       }
+                      #script_setting {
+                        display:none;
+                        width: max-content;
+                      }
+                      .script_setting_node {
+                        height: 30px;
+                        margin: 5px 5px;
+                      }
+                      .script_window input,
+                      select {
+                        outline: none;
+                        width: 150px;
+                        height: 25px;
+                        margin-left: 20px;
+                        background-color: rgba(211, 211, 211, 0.3);
+                        border: none;
+                        border-radius: 5px;
+                      }
+                      .script_window input:focus,
+                      select:focus {
+                        background: whitesmoke;
+                      } 
                   `);
-    $("#script_window").draggable();
+    //设置窗口可移动
+    $("#script_window_main").draggable();
     $("#show_ans_page").draggable();
+    $("#script_setting").draggable();
+    //主菜单跳转
     $("#sc_show_ans").click(sc_showAns);
-    $("#sc_read_doc").click(sc_read_document);
     $("#sc_do_test").click(sc_do_test);
+    $("#sc_config").click(sc_setting);
     $("#sc_back_menu").dblclick(() => {
       if (confirm("返回菜单主界面？搜索记录将被清空!!!")) {
-        $("#script_window").show();
+        $("#script_window_main").show();
         $("#show_ans_page").hide();
       }
     });
@@ -158,7 +245,6 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
       }
       return;
     };
-    $("#sc_set_token").click(sc_set_token);
     function sc_showAns() {
       if (
         sc_tk_token == `` ||
@@ -261,13 +347,137 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
         }
       }, 2000);
     }
-    function sc_read_document() {
-      alert("正在做了...");
-    }
+    //互评模块
+
+    $("#sc_do_judge").click(() => {
+      $("#script_desc").text("互评开始");
+      var sc_interval_times = 0;
+      //设置1500ms为周期，确保页面被正确加载后执行
+      var sc_intervalId = setInterval(() => {
+        try {
+          if (sc_interval_times < sc_judge_count) {
+            $("#script_desc").text(`正在进行第${sc_interval_times++}次互评`);
+            let sc_judgeList = document.querySelectorAll(
+              ".m-homeworkQuestionList .s"
+            );
+
+            //分数值0:满分；只有为-1:0分；超界：满分
+            if (sc_judge_mode == 1) {
+              //固定分数模式评分
+              for (let sc_judgeNode of sc_judgeList) {
+                let sc_temp_count = sc_judgeNode.childElementCount;
+                let sc_check_index = sc_temp_count - 1;
+                if (sc_judge_sorce == -1) sc_check_index = 0;
+                else {
+                  sc_check_index -= sc_judge_sorce;
+                  if (sc_check_index <= 0) sc_check_index = sc_temp_count - 1;
+                }
+                sc_judgeNode.children[sc_check_index].click();
+              }
+            } else {
+              //随机分数模式评分
+              for (let sc_judgeNode of sc_judgeList) {
+                let sc_temp_count = sc_judgeNode.childElementCount;
+                let sc_check_index = sc_temp_count - 1;
+                if (sc_judge_sorce == -1) sc_check_index = 0;
+                else {
+                  sc_check_index -= randomInt(0, sc_judge_sorce);
+                  if (sc_check_index <= 0) sc_check_index = sc_temp_count - 1;
+                }
+                sc_judgeNode.children[sc_check_index].click();
+              }
+            }
+            //写评语
+            let sc_judgeMessageList = document.querySelectorAll(
+              ".m-homeworkQuestionList textarea"
+            );
+            for (let sc_judgeMessageNode of sc_judgeMessageList) {
+              sc_judgeMessageNode.value =
+                sc_judge_msg[randomInt(0, sc_judge_msg.length)];
+            }
+            document
+              .querySelector(".u-btn.u-btn-default.f-fl.j-submitbtn")
+              .click();
+            document.querySelector(".j-gotonext").click();
+          }
+        } catch (err) {
+          $("#script_desc").text("互评出错，请确保正处于互评页面");
+          clearInterval(sc_intervalId);
+        }
+      }, 1500);
+      $("#script_desc").text("互评完成！");
+      //获取分数模块
+    });
+
+    //做视频测试部分
     function sc_do_test() {
       alert("正在做了...");
     }
+    //显示设置页面,并加载信息
+    function sc_setting() {
+      $("#script_setting").show();
+      $("#script_window_main").hide();
+      let sc_conf_tk_token_value = $("#sc_conf_tk_token_value");
+      let sc_conf_judge_count_value = $("#sc_conf_judge_count_value");
+      let sc_conf_judge_mode_value = $("#sc_conf_judge_mode_value");
+      let sc_conf_judge_sorce_value = $("#sc_conf_judge_sorce_value");
+      let sc_conf_judge_msg = $("#sc_conf_judge_msg");
+      if (
+        sc_tk_token == `` ||
+        sc_tk_token == null ||
+        sc_tk_token == undefined
+      ) {
+      } else {
+        sc_conf_tk_token_value.val(sc_tk_token);
+      }
+      sc_conf_judge_count_value.val(sc_judge_count);
+      sc_conf_judge_mode_value.val(sc_judge_mode);
+      sc_conf_judge_sorce_value.val(sc_judge_sorce);
+      sc_conf_judge_msg.val(arrToString(sc_judge_msg));
+    }
+    //设置页面
+    //双击标题保存信息并返回主界面
+    $("#script_setting .script_title").dblclick(() => {
+      let sc_conf_tk_token_value = $("#sc_conf_tk_token_value");
+      let sc_conf_judge_count_value = $("#sc_conf_judge_count_value");
+      let sc_conf_judge_mode_value = $("#sc_conf_judge_mode_value");
+      let sc_conf_judge_sorce_value = $("#sc_conf_judge_sorce_value");
+      let sc_conf_judge_msg = $("#sc_conf_judge_msg");
+      if (
+        sc_conf_tk_token_value.val() == "" ||
+        sc_conf_tk_token_value.val() == null
+      ) {
+      } else {
+        sc_tk_token == sc_conf_tk_token_value.val();
+        GM_setValue("sc_tk_token", sc_tk_token);
+      }
+      sc_judge_count = sc_conf_judge_count_value.val();
+      sc_judge_mode = sc_conf_judge_mode_value.val();
+      sc_judge_sorce = sc_conf_judge_sorce_value.val();
+      sc_judge_msg = sc_conf_judge_msg.val().split("|");
+      GM_setValue("sc_judge_sorce", sc_judge_sorce);
+      GM_setValue("sc_judge_count", sc_judge_count);
+      GM_setValue("sc_judge_mode", sc_judge_mode);
+      GM_setValue("sc_judge_msg", sc_judge_msg);
+      $("#script_setting").hide();
+      $("#script_window_main").show();
+    });
+    //显示帮助信息
+    $("#script_setting_info").dblclick(() => {
+      window
+        .open("https://res.yeah666.com/js_conf_help.html", "_blank")
+        .focus();
+    });
   }
-
+  function arrToString(arr) {
+    let sc_out = "";
+    for (let sc_var_temp of arr) {
+      sc_out += "|" + sc_var_temp;
+    }
+    return sc_out.substring(1);
+  }
+  function randomInt(start, size) {
+    return Math.floor(Math.random() * size) + start;
+  }
   // Your code here...
 })();
