@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yeah-Errors</title>
+    <script type="text/javascript">
+      window.onload = function () {
+        let mainPage = document.getElementsByClassName("main").item(0);
+        let color = [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5",
+          "6",
+          "7",
+          "8",
+          "9",
+          "a",
+          "b",
+          "c",
+          "d",
+          "e",
+          "f",
+        ];
+        var ok = setInterval(() => {
+          mainPage.style.boxShadow = `0px 0px 6px 4px #${
+            color[randomInt(0, 16)]
+          }${color[randomInt(0, 16)]}${color[randomInt(0, 16)]}`;
+        }, 1500);
+        function randomInt(start = 0, size = 10) {
+          return Math.floor(Math.random() * size + start);
+        }
+        mainPage.onclick = () => {
+          window.location.href = "https://github.com/Yeah-Errors/";
+        };
+      };
+    </script>
+    <style>
+      * {
+        margin: 0px;
+        padding: 0px;
+      }
+      body {
+        background-color: rgb(211, 211, 211);
+      }
+      .main {
+        position: fixed;
+        width: 50%;
+        height: 30%;
+        background-color: #fff;
+        top: 10%;
+        left: 25%;
+        border-radius: 15px;
+        box-shadow: 0px 0px 6px 4px #eee;
+        transition: box-shadow 1s ease;
+        text-align: center;
+        cursor: default;
+      }
+      .main h1,
+      h2 {
+        text-align: center;
+        height: 25%;
+        margin: 2% 0;
+      }
+      .main .body {
+        height: 75%;
+      }
+      .main .body p {
+        display: block;
+        font-weight: 600;
+        margin-top: 2%;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="main">
+      <h1>Yeah-Errors</h1>
+      <div class="body" onload="pageLoad()">
+        <h2>Yeah-MOOC脚本设置</h2>
+        <p>
+          懒得写，自己摸索，或者配置好token(<a href="https://q.icodef.com/"
+            >Token获取地址（需注册账号）</a
+          >)，其余使用默认配置即可
+        </p>
+      </div>
+    </div>
+  </body>
+</html>
