@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         yeah_MOOC脚本
 // @namespace    https://res.yeah666.com
-// @version      2.1.3
+// @version      2.1.5
 // @description  慕课脚本，可以显示答案（题库），刷文档，做测试
 // @author       yeah
 // @icon         https://res.yeah666.com/img/logocore.png
@@ -37,6 +37,7 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
                           <div class="script_title">Yeah-MOOC脚本</div>
                           <div class="script_desc" id="script_desc">此脚本可以用来刷文档，显示答案，刷课程等</div>
                           <div class="script_but" id="sc_show_ans">显示答案</div>
+                          <div class="script_but" id="sc_set_token">修改token</div>
                           <div class="script_but" id="sc_read_doc">刷文档</div>
                           <div class="script_but" id="sc_do_test">做测试</div>
                       </div>
@@ -56,7 +57,7 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
                           position: fixed;
                           top: 30vh;
                           right: 5vh;
-                          height: 210px;
+                          height: 220px;
                           width: 160px;
                           background-color: rgba(200, 200, 200, 0.2);
                           z-index: 9999;
@@ -73,6 +74,7 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
                           line-height: 25px;
                           font-size: 20px;
                           margin-bottom: 10px;
+                          cursor: pointer;
                       }
                       .script_desc {
                           color: rgb(114, 114, 114);
@@ -134,11 +136,17 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
     $("#sc_show_ans").click(sc_showAns);
     $("#sc_read_doc").click(sc_read_document);
     $("#sc_do_test").click(sc_do_test);
-    $("#sc_back_menu").click(() => {
-      if(confirm("返回菜单主界面？搜索记录将被清空!!!")){
-      $("#script_window").show();
-      $("#show_ans_page").hide();
+    $("#sc_back_menu").dblclick(() => {
+      if (confirm("返回菜单主界面？搜索记录将被清空!!!")) {
+        $("#script_window").show();
+        $("#show_ans_page").hide();
       }
+    });
+    $("#sc_set_token").click(() => {
+      sc_tk_token = prompt(`当前token值为${sc_tk_token},请填写新的token`);
+      GM_setValue("sc_tk_token", sc_tk_token);
+      $("#script_desc").text(`token配置成功:token=${sc_tk_token}`);
+      return;
     });
     function sc_showAns() {
       if (
@@ -149,7 +157,7 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
         $("#script_desc").text("未配置token，请配置token后重试");
         sc_tk_token = prompt("未配置token，请设置题库token值:");
         GM_setValue("sc_tk_token", sc_tk_token);
-        $("#script_desc").text(`token配置成功:${sc_tk_token}`);
+        $("#script_desc").text(`token配置成功:token=${sc_tk_token}`);
         return;
       }
       alert(
@@ -233,7 +241,9 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
                 },
               });
             } else {
-              $("#sc_log_info").text("全部题目解答完成");
+              $("#sc_log_info").text(
+                "全部题目解答完成,可双击题目返回脚本主菜单"
+              );
             }
           }
         } catch (err) {
