@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         yeah_MOOC脚本
 // @namespace    https://res.yeah666.com
-// @version      2.1.6
+// @version      2.1.7
 // @description  慕课脚本，可以显示答案（题库），刷文档，做测试
 // @author       yeah
 // @icon         https://res.yeah666.com/img/logocore.png
@@ -145,26 +145,25 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
         $("#show_ans_page").hide();
       }
     });
-    $("#sc_set_token").click(() => {
+    let sc_set_token = () => {
       let sc_tokenTemp = prompt(`当前token值为${sc_tk_token},请填写新的token`);
       if (sc_tokenTemp == null || sc_tokenTemp == "") {
         $("#script_desc").text("输入的token值为空,token未被修改");
       } else {
+        sc_tk_token = sc_tokenTemp;
         GM_setValue("sc_tk_token", sc_tk_token);
         $("#script_desc").text(`token配置成功:token=${sc_tk_token}`);
       }
       return;
-    });
+    };
+    $("#sc_set_token").click(sc_set_token);
     function sc_showAns() {
       if (
         sc_tk_token == `` ||
         sc_tk_token == null ||
         sc_tk_token == undefined
       ) {
-        $("#script_desc").text("未配置token，请配置token后重试");
-        sc_tk_token = prompt("未配置token，请设置题库token值:");
-        GM_setValue("sc_tk_token", sc_tk_token);
-        $("#script_desc").text(`token配置成功:token=${sc_tk_token}`);
+        sc_set_token();
         return;
       }
       alert(
