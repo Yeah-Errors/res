@@ -20,8 +20,8 @@
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @require      https://lib.baomitu.com/jqueryui/1.13.2/jquery-ui.js
 // @run-at       document-end
-// @updateURL    https://res.yeah666.com/js/mooc_monkey_meta.js
 // @downloadURL  https://res.yeah666.com/js/mooc_monkey.js
+// @updateURL    https://res.yeah666.com/js/mooc_monkey_meta.js
 // ==/UserScript==
 
 //答题前请配token
