@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         yeah_MOOC脚本
 // @namespace    https://res.yeah666.com
-// @version      2.1.5
+// @version      2.1.6
 // @description  慕课脚本，可以显示答案（题库），刷文档，做测试
 // @author       yeah
 // @icon         https://res.yeah666.com/img/logocore.png
@@ -33,18 +33,18 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
     "use strict";
 
     var elementHtml = `
-                      <div class="script_window" id="script_window">
+                      <div class="script_window sc_scroll_ui" id="script_window">
                           <div class="script_title">Yeah-MOOC脚本</div>
-                          <div class="script_desc" id="script_desc">此脚本可以用来刷文档，显示答案，刷课程等</div>
+                          <div class="script_desc sc_scroll_ui" id="script_desc">此脚本可以用来刷文档，显示答案，刷课程等</div>
                           <div class="script_but" id="sc_show_ans">显示答案</div>
                           <div class="script_but" id="sc_set_token">修改token</div>
                           <div class="script_but" id="sc_read_doc">刷文档</div>
                           <div class="script_but" id="sc_do_test">做测试</div>
                       </div>
-                      <div class="script_window anspage" id="show_ans_page">
+                      <div class="script_window anspage " id="show_ans_page">
                             <div class="script_title" id="sc_back_menu">Yeah-显示答案</div>
-                            <div class="script_desc" id="sc_log_info"></div>
-                            <div class="ans_textarea" id="sc_ans_textarea"></div>
+                            <div class="script_desc sc_scroll_ui" id="sc_log_info"></div>
+                            <div class="ans_textarea sc_scroll_ui" id="sc_ans_textarea"></div>
                         </div>
                   `;
 
@@ -57,7 +57,8 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
                           position: fixed;
                           top: 30vh;
                           right: 5vh;
-                          height: 220px;
+                          height: auto;
+                          max-height:240px;
                           width: 160px;
                           background-color: rgba(200, 200, 200, 0.2);
                           z-index: 9999;
@@ -101,24 +102,26 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
                         text-align: left;
                         padding-left: 8px;
                         max-height: 260px;
+                      }
+                      .sc_scroll_ui{
                         overflow: auto;
                         padding-right: 4px;
                         word-wrap: break-word;
                         word-break: break-all;
                       }
-                      .ans_textarea::-webkit-scrollbar:horizontal {
+                      .sc_scroll_ui::-webkit-scrollbar:horizontal {
                         display: none;
                       }
-                      .ans_textarea::-webkit-scrollbar {
+                      .sc_scroll_ui::-webkit-scrollbar {
                         width: 4px;
                       }
   
-                      .ans_textarea::-webkit-scrollbar-thumb {
+                      .sc_scroll_ui::-webkit-scrollbar-thumb {
                         background-color: rgba(0, 0, 0, 0.5);
                         border-radius: 4px;
                       }
   
-                      .ans_textarea::-webkit-scrollbar-track {
+                      .sc_scroll_ui::-webkit-scrollbar-track {
                         background-color: rgba(114, 114, 114, 0.1);
                         border-radius: 4px;
                       }
@@ -143,9 +146,13 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
       }
     });
     $("#sc_set_token").click(() => {
-      sc_tk_token = prompt(`当前token值为${sc_tk_token},请填写新的token`);
-      GM_setValue("sc_tk_token", sc_tk_token);
-      $("#script_desc").text(`token配置成功:token=${sc_tk_token}`);
+      let sc_tokenTemp = prompt(`当前token值为${sc_tk_token},请填写新的token`);
+      if (sc_tokenTemp == null || sc_tokenTemp == "") {
+        $("#script_desc").text("输入的token值为空,token未被修改");
+      } else {
+        GM_setValue("sc_tk_token", sc_tk_token);
+        $("#script_desc").text(`token配置成功:token=${sc_tk_token}`);
+      }
       return;
     });
     function sc_showAns() {
