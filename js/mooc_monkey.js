@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         yeah_MOOC脚本
 // @namespace    https://res.yeah666.com
-// @version      2.1
+// @version      2.1.1
 // @description  慕课脚本，可以显示答案（题库），刷文档，做测试
 // @author       yeah
 // @icon         https://res.yeah666.com/img/logocore.png
@@ -134,8 +134,10 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
     $("#sc_read_doc").click(sc_read_document);
     $("#sc_do_test").click(sc_do_test);
     $("#sc_back_menu").click(() => {
+      if(confirm("返回菜单主界面？搜索记录将被清空!!!")){
       $("#script_window").show();
       $("#show_ans_page").hide();
+      }
     });
     function sc_showAns() {
       if (
@@ -146,6 +148,7 @@ var sc_tk_token = GM_getValue("sc_tk_token", "");
         $("#script_desc").text("未配置token，请配置token后重试");
         sc_tk_token = prompt("未配置token，请设置题库token值:");
         GM_setValue("sc_tk_token", sc_tk_token);
+        $("#script_desc").text(`token配置成功:${sc_tk_token}`);
         return;
       }
       alert(
