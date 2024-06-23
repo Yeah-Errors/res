@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name         Yeah_MOOC脚本
 // @namespace    https://res.yeah666.com
-// @version      3.0.2
-// @description  慕课脚本，可以显示答案（题库），刷文档（暂不支持），做测试（暂不支持）
+// @version      3.0.3
+// @description  慕课脚本，可以显示答案（题库），一键互评（暂不支持），做测试（暂不支持）
 // @author       Yeah
 // @icon         https://res.yeah666.com/img/logocore.png
 // @grant        unsafeWindow
@@ -257,7 +257,7 @@ var sc_judge_msg = GM_getValue("sc_judge_msg", ["好", "good", "1"]);
       alert(
         "已进入，答案显示模式，带有图片的题目可能会搜索不完全，使用时请授权跨域跨域请求权限，否则题目搜索将不可用！"
       );
-      $("#script_window").hide();
+      $("#script_window_main").hide();
       $("#show_ans_page").show();
       $("#sc_log_info").text(
         "当前状态：显示答案,答案不一定正确，需配置题库信息！"
@@ -352,7 +352,7 @@ var sc_judge_msg = GM_getValue("sc_judge_msg", ["好", "good", "1"]);
     $("#sc_do_judge").click(() => {
       $("#script_desc").text("互评开始");
       var sc_interval_times = 0;
-      //设置1500ms为周期，确保页面被正确加载后执行
+      //设置2500ms为周期，确保页面被正确加载后执行（不是ikun）
       var sc_intervalId = setInterval(() => {
         try {
           if (sc_interval_times < sc_judge_count) {
@@ -399,12 +399,12 @@ var sc_judge_msg = GM_getValue("sc_judge_msg", ["好", "good", "1"]);
               .querySelector(".u-btn.u-btn-default.f-fl.j-submitbtn")
               .click();
             document.querySelector(".j-gotonext").click();
-          }
+          } else clearInterval(sc_intervalId);
         } catch (err) {
           $("#script_desc").text("互评出错，请确保正处于互评页面");
           clearInterval(sc_intervalId);
         }
-      }, 1500);
+      }, 2500);
       $("#script_desc").text("互评完成！");
       //获取分数模块
     });
