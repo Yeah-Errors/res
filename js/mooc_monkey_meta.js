@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Yeah_MOOC脚本
 // @namespace    https://res.yeah666.com
-// @version      3.0.3
+// @version      3.0.4
 // @description  慕课脚本，可以显示答案（题库），一键互评，做测试（暂不支持）
 // @author       Yeah
 // @icon         https://res.yeah666.com/img/logocore.png
