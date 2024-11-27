@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Yeah_学习脚本
 // @namespace    https://res.yeah666.com
-// @version      4.0
+// @version      4.1
 // @description  慕课,头歌脚本，可以显示答案（需要配置题库),一键互评,间接解除头歌禁止复制
 // @author       Yeah
 // @icon         https://res.yeah666.com/img/logocore.png

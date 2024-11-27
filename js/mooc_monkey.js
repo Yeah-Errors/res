@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Yeah_学习脚本
 // @namespace    https://res.yeah666.com
-// @version      4.0
+// @version      4.1
 // @description  慕课,头歌脚本，可以显示答案（需要配置题库),一键互评,间接解除头歌禁止复制
 // @author       Yeah
 // @icon         https://res.yeah666.com/img/logocore.png
@@ -27,45 +27,6 @@
 
 (function () {
   var currentUrl = window.location.href;
-  var baseStyle = `
-     .script_window {
-         position: fixed;
-         top: 30vh;
-         right: 5vh;
-         height: auto;
-         max-height:240px;
-         width: 160px;
-         background-color: rgba(200, 200, 200, 0.2);
-         z-index: 9999;
-         padding: 10px 10px 20px 10px;
-         border-radius: 10px;
-         text-align: center;
-         cursor:default;
-     }
-     .script_window:hover {
-         background-color: rgba(200, 200, 200, 0.4);
-     }
-     .script_title {
-         height: 25px;
-         line-height: 25px;
-         font-size: 20px;
-         margin-bottom: 10px;
-         cursor: pointer;
-     }
-     .script_desc {
-         color: rgb(114, 114, 114);
-         font-size: 14px;
-         height: 50px;
-     }
-     .script_but {
-         height: 30px;
-         line-height: 30px;
-         border-radius: 15px;
-         margin: 5px 0px;
-         cursor: pointer;
-     }`;
-  $("style").append(baseStyle);
-
   if (currentUrl.includes("icourse163")) {
     //获取基础配置信息
     var sc_tk_token = GM_getValue("sc_tk_token", "");
@@ -76,7 +37,6 @@
     $(sc_code);
     function sc_code() {
       "use strict";
-
       var elementHtml = `
     <div class="script_window sc_scroll_ui" id="script_window_main">
       <div class="script_title">Yeah-MOOC脚本</div>
@@ -153,76 +113,110 @@
                   `;
       // 将元素插入至body
       $("body").append(elementHtml);
-
-      // 追加样式到已有的 <style> 标签
       $("style").append(`
-                      .script_but:hover {
-                          background-color: #ffffffaa;
-                      }
-                      .anspage {
-                        display:none;
-                        width: 240px;
-                        height: auto;
-                        max-height: 360px;
-                      }
-                      .ans_textarea {
-                        text-align: left;
-                        padding-left: 8px;
-                        max-height: 260px;
-                      }
-                      .sc_scroll_ui{
-                        overflow: auto;
-                        padding-right: 4px;
-                        word-wrap: break-word;
-                        word-break: break-all;
-                      }
-                      .sc_scroll_ui::-webkit-scrollbar:horizontal {
-                        display: none;
-                      }
-                      .sc_scroll_ui::-webkit-scrollbar {
-                        width: 4px;
-                      }
+        .script_window {
+         position: fixed;
+         top: 30vh;
+         right: 5vh;
+         height: auto;
+         max-height:240px;
+         width: 160px;
+         background-color: rgba(200, 200, 200, 0.2);
+         z-index: 9999;
+         padding: 10px 10px 20px 10px;
+         border-radius: 10px;
+         text-align: center;
+         cursor:default;
+     }
+     .script_window:hover {
+         background-color: rgba(200, 200, 200, 0.4);
+     }
+     .script_title {
+         height: 25px;
+         line-height: 25px;
+         font-size: 20px;
+         margin-bottom: 10px;
+         cursor: pointer;
+     }
+     .script_desc {
+         color: rgb(114, 114, 114);
+         font-size: 14px;
+         height: 50px;
+     }
+     .script_but {
+         height: 30px;
+         line-height: 30px;
+         border-radius: 15px;
+         margin: 5px 0px;
+         cursor: pointer;
+     }
+     .script_but:hover {
+         background-color: #ffffffaa;
+     }
+     .anspage {
+       display:none;
+       width: 240px;
+       height: auto;
+       max-height: 360px;
+     }
+     .ans_textarea {
+       text-align: left;
+       padding-left: 8px;
+       max-height: 260px;
+     }
+     .sc_scroll_ui{
+       overflow: auto;
+       padding-right: 4px;
+       word-wrap: break-word;
+       word-break: break-all;
+     }
+     .sc_scroll_ui::-webkit-scrollbar:horizontal {
+       display: none;
+     }
+     .sc_scroll_ui::-webkit-scrollbar {
+       width: 4px;
+     }
   
-                      .sc_scroll_ui::-webkit-scrollbar-thumb {
-                        background-color: rgba(0, 0, 0, 0.5);
-                        border-radius: 4px;
-                      }
+     .sc_scroll_ui::-webkit-scrollbar-thumb {
+       background-color: rgba(0, 0, 0, 0.5);
+       border-radius: 4px;
+     }
   
-                      .sc_scroll_ui::-webkit-scrollbar-track {
-                        background-color: rgba(114, 114, 114, 0.1);
-                        border-radius: 4px;
-                      }
-                      .sc_ans {
-                        color: red;
-                        border-bottom: 1px dotted rgba(114, 114, 114, 0.3);
-                        font-size:16px;
-                      }
-                      #sc_back_menu {
-                        cursor: pointer;
-                      }
-                      #script_setting {
-                        display:none;
-                        width: max-content;
-                      }
-                      .script_setting_node {
-                        height: 30px;
-                        margin: 5px 5px;
-                      }
-                      .script_window input,
-                      select {
-                        outline: none;
-                        width: 150px;
-                        height: 25px;
-                        margin-left: 20px;
-                        background-color: rgba(211, 211, 211, 0.3);
-                        border: none;
-                        border-radius: 5px;
-                      }
-                      .script_window input:focus,
-                      select:focus {
-                        background: whitesmoke;
-                      } 
-                  `);
+     .sc_scroll_ui::-webkit-scrollbar-track {
+       background-color: rgba(114, 114, 114, 0.1);
+       border-radius: 4px;
+     }
+     .sc_ans {
+       color: red;
+       border-bottom: 1px dotted rgba(114, 114, 114, 0.3);
+       font-size:16px;
+     }
+     #sc_back_menu {
+       cursor: pointer;
+     }
+     #script_setting {
+       display:none;
+       width: max-content;
+     }
+     .script_setting_node {
+       height: 30px;
+       margin: 5px 5px;
+     }
+     .script_window input,
+     select {
+       outline: none;
+       width: 150px;
+       height: 25px;
+       margin-left: 20px;
+       background-color: rgba(211, 211, 211, 0.3);
+       border: none;
+       border-radius: 5px;
+     }
+     .script_window input:focus,
+     select:focus {
+       background: whitesmoke;
+     } 
+`);
       //设置窗口可移动
       $("#script_window_main").draggable();
       $("#show_ans_page").draggable();
@@ -452,6 +446,50 @@
     <div class="script_desc sc_scroll_ui" id="script_desc">此脚本使用fetch拦截请求以代替头歌文本区域，间接解除不允许粘贴的限制</div>
     <div class="script_but" id="script_start">开始替换</div>`;
     $("body").append(insertHtml);
+    var htmlcss = `
+     .script_window {
+        position: fixed;
+        top: 30vh;
+        right: 5vh;
+        height: auto;
+        max-height: 240px;
+        width: 200px;
+        background-color: rgba(255, 255,255, 0.6);
+        z-index: 9999;
+        padding: 10px 10px 20px 10px;
+        border-radius: 10px;
+        text-align: center;
+        cursor: default;
+      }
+      .script_window:hover {
+        background-color: rgba(255, 255,255, 0.9);
+      }
+      .script_title {
+        height: 25px;
+        line-height: 25px;
+        font-size: 20px;
+        margin-bottom: 10px;
+        cursor: pointer;
+      }
+      .script_desc {
+        color: rgb(114, 114, 114);
+        font-size: 14px;
+        height: 50px;
+        margin-bottom:20px;
+      }
+      .script_but {
+        height: 30px;
+        line-height: 30px;
+        border-radius: 15px;
+        font-size: 20px;
+        margin: 5px 0px;
+        cursor: pointer;
+      }
+      .script_but:hover {
+        background-color: #ffffffaa;
+      }
+    `;
+    $("style").append(htmlcss);
     $("#script_window_main").draggable();
   $("#script_start").click(() => {
     let replaceWorld = prompt("请输入要键入的文本(注意！替换过程页面会强制刷新，请自行保存当前工作内容)：");
