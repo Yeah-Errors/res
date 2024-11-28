@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         Yeah_学习脚本
 // @namespace    https://res.yeah666.com
-// @version      4.1
+// @version      4.2
 // @description  慕课,头歌脚本，可以显示答案（需要配置题库),一键互评,间接解除头歌禁止复制
 // @author       Yeah
 // @icon         https://res.yeah666.com/img/logocore.png
@@ -21,8 +21,8 @@
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @require      https://lib.baomitu.com/jqueryui/1.13.2/jquery-ui.js
 // @run-at       document-end
-// @downloadURL  https://res.yeah666.com/js/mooc_monkey.js
-// @updateURL    https://res.yeah666.com/js/mooc_monkey_meta.js
+// @downloadURL  https://res.yeah666.com/js/yeah_tool.js
+// @updateURL    https://res.yeah666.com/js/js_update.js
 // ==/UserScript==
 
 (function () {
@@ -493,11 +493,10 @@
     $("#script_window_main").draggable();
   $("#script_start").click(() => {
     let replaceWorld = prompt("请输入要键入的文本(注意！替换过程页面会强制刷新，请自行保存当前工作内容)：");
+    if(replaceWorld){
     const originFetch = fetch;
-    console.log(originFetch)
     window.unsafeWindow.fetch = (url, options) => {
         return originFetch(url, options).then(async (response) => {
-            console.log(url)
             if(url.includes("reset_original_code.json")&&replaceWorld.length>0){
                 const responseClone = response.clone();
                 let res = await responseClone.json();
@@ -518,8 +517,7 @@
         } else {
         }
     }, 100);
+    }
   });
   }
-
-  // Your code here...
 })();
