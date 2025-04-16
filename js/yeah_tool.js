@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name         Yeah_学习脚本
-// @namespace    https://res.yeah666.com
-// @version      4.2
+// @namespace    https://res.yaojiu.org
+// @version      4.3
 // @description  慕课,头歌脚本，可以显示答案（需要配置题库),一键互评,间接解除头歌禁止复制
 // @author       Yeah
-// @icon         https://res.yeah666.com/img/logocore.png
+// @icon         https://res.yaojiu.org/img/logocore.png
 // @grant        unsafeWindow
 // @grant        GM_xmlhttpRequest
 // @grant        GM.xmlHttpRequest
@@ -21,8 +21,8 @@
 // @require      https://code.jquery.com/jquery-3.7.1.min.js
 // @require      https://lib.baomitu.com/jqueryui/1.13.2/jquery-ui.js
 // @run-at       document-end
-// @downloadURL  https://res.yeah666.com/js/yeah_tool.js
-// @updateURL    https://res.yeah666.com/js/js_update.js
+// @downloadURL  https://res.yaojiu.org/js/yeah_tool.js
+// @updateURL    https://res.yaojiu.org/js/js_update.js
 // ==/UserScript==
 
 (function () {
@@ -426,7 +426,7 @@
         });
         //显示帮助信息
         $("#script_setting_info").dblclick(() => {
-          window.open("https://res.yeah666.com/js_conf_help.html", "_blank").focus();
+          window.open("https://res.yaojiu.org/js_conf_help.html", "_blank").focus();
         });
       }
       function arrToString(arr) {
