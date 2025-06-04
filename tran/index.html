@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>专注力训练 | 舒尔特方格</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #1a2a6c, #b21f1f, #1a2a6c);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        #main {
+            width: 100%;
+            max-width: 800px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        
+        header {
+            margin-bottom: 25px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .description {
+            color: #7f8c8d;
+            font-size: 1.1rem;
+            max-width: 600px;
+            margin: 0 auto 25px;
+            line-height: 1.6;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        #timer {
+            font-size: 2.5rem;
+            font-weight: bold;
+            background: linear-gradient(45deg, #3498db, #2c3e50);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            padding: 10px 25px;
+            border-radius: 50px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 180px;
+        }
+        
+        #startBtn {
+            background: linear-gradient(45deg, #27ae60, #2ecc71);
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            font-weight: bold;
+        }
+        
+        #startBtn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+        }
+        
+        #startBtn:active {
+            transform: translateY(1px);
+        }
+        
+        #startBtn.running {
+            background: linear-gradient(45deg, #e74c3c, #c0392b);
+        }
+        
+        #core {
+            background-color: white;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 400px;
+            height: auto;
+            border-radius: 15px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            padding: 20px;
+            transition: transform 0.3s ease;
+        }
+        
+        #core:hover {
+            transform: translateY(-5px);
+        }
+        
+        table {
+            border-spacing: 0px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        td {
+            width: 20%;
+            height: 70px;
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2c3e50;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        td:hover {
+            background-color: #dee5eb;
+            /* transform: scale(1.05); */
+            
+        }
+        
+        tr>td:not(:last-child) {
+            border-right: 2px dotted black;
+        }
+        
+        tr:not(:last-child)>td {
+            border-bottom: 2px dotted black;
+        }
+        
+        .instructions {
+            margin-top: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: left;
+        }
+        
+        .instructions h2 {
+            color: #2c3e50;
+            margin-bottom: 15px;
+            font-size: 1.4rem;
+        }
+        
+        .instructions ul {
+            padding-left: 25px;
+        }
+        
+        .instructions li {
+            margin-bottom: 10px;
+            color: #7f8c8d;
+            line-height: 1.5;
+        }
+        
+        footer {
+            margin-top: 30px;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 600px) {
+            #main {
+                padding: 20px 15px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                gap: 15px;
+            }
+            
+            #timer {
+                font-size: 2rem;
+                min-width: 150px;
+            }
+            
+            #startBtn {
+                padding: 12px 30px;
+                font-size: 1.1rem;
+            }
+            
+            td {
+                height: 55px;
+                font-size: 1.5rem;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        .pulse {
+            animation: pulse 1s infinite;
+        }
+    </style>
+</head>
+<body>
+    <div id="main">
+        <header>
+            <h1>专注力训练</h1>
+            <p class="description">舒尔特方格注意力训练法：按顺序点击1-25的数字，用时越短表示注意力越集中</p>
+        </header>
+        
+        <div class="controls">
+            <div id="timer">00:00.00</div>
+            <button id="startBtn">开始训练</button>
+        </div>
+        
+        <div id="core">
+            <table>
+                <tr>
+                    <td id="11">1</td>
+                    <td id="12">2</td>
+                    <td id="13">3</td>
+                    <td id="14">4</td>
+                    <td id="15">5</td>
+                </tr>
+                <tr>
+                    <td id="21">6</td>
+                    <td id="22">7</td>
+                    <td id="23">8</td>
+                    <td id="24">9</td>
+                    <td id="25">10</td>
+                </tr>
+                <tr>
+                    <td id="31">11</td>
+                    <td id="32">12</td>
+                    <td id="33">13</td>
+                    <td id="34">14</td>
+                    <td id="35">15</td>
+                </tr>
+                <tr>
+                    <td id="41">16</td>
+                    <td id="42">17</td>
+                    <td id="43">18</td>
+                    <td id="44">19</td>
+                    <td id="45">20</td>
+                </tr>
+                <tr>
+                    <td id="51">21</td>
+                    <td id="52">22</td>
+                    <td id="53">23</td>
+                    <td id="54">24</td>
+                    <td id="55">25</td>
+                </tr>
+            </table>
+        </div>
+        
+        <div class="instructions">
+            <h2>训练说明：</h2>
+            <ul>
+                <li>点击"开始训练"按钮，计时器启动</li>
+                <li>按照数字顺序(1→2→3→...→25)依次点击方格</li>
+                <li>完成所有数字点击后，计时器停止</li>
+                <li>正常成年人完成时间在20-40秒，经常训练可缩短至15秒</li>
+                <li>每天训练5分钟，持续两周可明显改善注意力</li>
+            </ul>
+        </div>
+        
+        <footer>
+            <p>专注力训练工具 | 基于舒尔特方格注意力训练法</p>
+        </footer>
+    </div>
+
+    <script>
+        // 全局变量
+        let timerInterval;
+        let startTime;
+        let isRunning = false;
+        let currentNumber = 1;
+        
+        // DOM元素
+        const timerElement = document.getElementById('timer');
+        const startBtn = document.getElementById('startBtn');
+        
+        // 初始化数字数组
+        const num = [];
+        for (let index = 1; index <= 25; index++) {
+            num.push(index);
+        }
+        
+        // 更新表格元素
+        function updateElement() {
+            // 复制数组以避免修改原始数组
+            const shuffledNum = [...num];
+            
+            // 清空当前数字
+            currentNumber = 1;
+            
+            for (let x = 1; x < 6; x++) {
+                for (let y = 1; y < 6; y++) {
+                    let pos = x*10+y;
+                    let ele = document.getElementById(pos);
+                    
+                    // 随机获取数字并移除
+                    let randIndex = Math.floor(Math.random() * shuffledNum.length);
+                    ele.innerText = shuffledNum[randIndex];
+                    shuffledNum.splice(randIndex,1);
+                    
+                    // 重置样式
+                    ele.style.backgroundColor = '';
+                    ele.style.color = '#2c3e50';
+                }
+            }
+        }
+        
+        // 格式化时间显示
+        function formatTime(ms) {
+            const minutes = Math.floor(ms / 60000);
+            const seconds = Math.floor((ms % 60000) / 1000);
+            const milliseconds = Math.floor((ms % 1000) / 10);
+            
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}.${milliseconds.toString().padStart(2, '0')}`;
+        }
+        
+        // 开始计时器
+        function startTimer() {
+            startTime = Date.now();
+            timerInterval = setInterval(() => {
+                const elapsedTime = Date.now() - startTime;
+                timerElement.textContent = formatTime(elapsedTime);
+            }, 10);
+        }
+        
+        // 停止计时器
+        function stopTimer() {
+            clearInterval(timerInterval);
+            isRunning = false;
+            startBtn.textContent = '重新开始';
+            startBtn.classList.remove('running');
+        }
+        
+        // 处理数字点击
+        function handleNumberClick(event) {
+            if (!isRunning) return;
+            
+            const clickedNumber = parseInt(event.target.innerText);
+            
+            if (clickedNumber === currentNumber) {
+                // 正确点击
+                event.target.style.backgroundColor = '#2ecc71';
+                event.target.style.color = 'white';
+                event.target.classList.add('pulse');
+                
+                setTimeout(() => {
+                    event.target.classList.remove('pulse');
+                }, 500);
+                
+                currentNumber++;
+                
+                // 检查是否完成
+                if (currentNumber > 25) {
+                    stopTimer();
+                    setTimeout(() => {
+                        alert(`恭喜完成训练！用时：${timerElement.textContent}`);
+                    }, 300);
+                }
+            } else {
+                // 错误点击
+                event.target.style.backgroundColor = '#e74c3c';
+                event.target.style.color = 'white';
+                
+                setTimeout(() => {
+                    event.target.style.backgroundColor = '';
+                    event.target.style.color = '#2c3e50';
+                }, 500);
+            }
+        }
+        
+        // 开始按钮事件
+        startBtn.addEventListener('click', () => {
+            if (isRunning) {
+                // 如果正在运行，重置
+                clearInterval(timerInterval);
+            }
+            
+            // 重新开始
+            updateElement();
+            startTimer();
+            isRunning = true;
+            startBtn.textContent = '训练中...';
+            startBtn.classList.add('running');
+        });
+        
+        // 为每个表格单元格添加点击事件
+        for (let x = 1; x < 6; x++) {
+            for (let y = 1; y < 6; y++) {
+                let pos = x*10+y;
+                let ele = document.getElementById(pos);
+                ele.addEventListener('click', handleNumberClick);
+            }
+        }
+        
+        // 初始化页面
+        window.onload = function() {
+            updateElement();
+        }
+    </script>
+</body>
+</html>
